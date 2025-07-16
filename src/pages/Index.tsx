@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ProductCard } from "@/components/ProductCard";
 import { LeadCaptureForm, LeadFormData } from "@/components/LeadCaptureForm";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { PreOrderDeposit } from "@/components/PreOrderDeposit";
 import { MpesaPayment } from "@/components/MpesaPayment";
 import { products } from "@/data/products";
 import { useToast } from "@/hooks/use-toast";
@@ -72,13 +73,15 @@ const Index = () => {
   const selectedProductData = selectedProduct ? products.find(p => p.id === selectedProduct) : null;
 
   if (showPayment && selectedProductData) {
+    const isPreOrder = selectedProductData.status === 'preorder';
+    
     return (
       <div className="min-h-screen bg-background">
         <header className="bg-card border-b sticky top-0 z-40">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Smartphone className="w-6 h-6 text-primary" />
-              <h1 className="text-lg font-bold">SmartPhone Sales EA</h1>
+              <h1 className="text-lg font-bold">Tecno Kenya</h1>
             </div>
             <Button 
               variant="outline" 
@@ -90,13 +93,30 @@ const Index = () => {
         </header>
 
         <main className="container mx-auto px-4 py-8 max-w-md">
-          <MpesaPayment
-            amount={selectedProductData.price}
-            productName={selectedProductData.name}
-            productId={selectedProductData.id}
-            onSuccess={handlePaymentSuccess}
-            onCancel={() => setShowPayment(false)}
-          />
+          {isPreOrder ? (
+            <PreOrderDeposit
+              productName={selectedProductData.name}
+              productId={selectedProductData.id}
+              totalPrice={selectedProductData.price}
+              onSuccess={(transactionId, depositAmount) => {
+                toast({
+                  title: "Pre-Order Secured!",
+                  description: `Deposit of KES ${depositAmount.toLocaleString()} paid. Transaction: ${transactionId}`,
+                });
+                setShowPayment(false);
+                setSelectedProduct(null);
+              }}
+              onCancel={() => setShowPayment(false)}
+            />
+          ) : (
+            <MpesaPayment
+              amount={selectedProductData.price}
+              productName={selectedProductData.name}
+              productId={selectedProductData.id}
+              onSuccess={handlePaymentSuccess}
+              onCancel={() => setShowPayment(false)}
+            />
+          )}
         </main>
       </div>
     );
@@ -110,16 +130,16 @@ const Index = () => {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <Smartphone className="w-6 h-6 text-primary" />
-              <h1 className="text-xl font-bold">SmartPhone Sales EA</h1>
+              <h1 className="text-xl font-bold">Tecno Kenya</h1>
             </div>
             <Badge className="status-badge status-available">
               <TrendingUp className="w-3 h-3 mr-1" />
-              Best Prices in Kenya
+              Official Tecno Dealer
             </Badge>
           </div>
           
           <p className="text-sm text-muted-foreground text-center">
-            Quality smartphones with M-Pesa payments & fast delivery across East Africa
+            Latest Tecno smartphones with flexible M-Pesa payments & fast delivery
           </p>
         </div>
       </header>

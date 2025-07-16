@@ -10,6 +10,8 @@ interface MpesaPaymentProps {
   amount: number;
   productName: string;
   productId: string;
+  isDeposit?: boolean;
+  totalPrice?: number;
   onSuccess?: (transactionId: string) => void;
   onCancel?: () => void;
 }
@@ -18,6 +20,8 @@ export const MpesaPayment = ({
   amount, 
   productName, 
   productId, 
+  isDeposit = false,
+  totalPrice,
   onSuccess, 
   onCancel 
 }: MpesaPaymentProps) => {
@@ -112,9 +116,25 @@ export const MpesaPayment = ({
           </div>
           
           <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground">
-              You will receive an SMS confirmation shortly. Our team will contact you within 24 hours to arrange delivery.
-            </p>
+            {isDeposit ? (
+              <div className="space-y-2">
+                <p className="text-sm text-muted-foreground">
+                  ✅ Pre-order secured! You've paid {formatPrice(amount)} as deposit.
+                </p>
+                {totalPrice && (
+                  <p className="text-sm text-muted-foreground">
+                    Remaining balance: {formatPrice(totalPrice - amount)} (due upon delivery)
+                  </p>
+                )}
+                <p className="text-sm text-muted-foreground">
+                  We'll notify you when your phone arrives. Expected delivery in 1-3 weeks.
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                You will receive an SMS confirmation shortly. Our team will contact you within 24 hours to arrange delivery.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
