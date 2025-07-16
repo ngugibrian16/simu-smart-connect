@@ -11,6 +11,7 @@ export interface Product {
   brand: string;
   category: 'budget' | 'mid-range' | 'premium';
   description: string;
+  bestseller?: boolean;
   specifications: {
     display: string;
     camera: string;
@@ -33,6 +34,7 @@ export const products: Product[] = [
     brand: 'Tecno',
     category: 'budget',
     description: 'Big screen, big battery, big performance at an unbeatable price.',
+    bestseller: true,
     specifications: {
       display: '6.8" HD+ Display',
       camera: '48MP AI Camera',

@@ -178,6 +178,31 @@ const Index = () => {
           </TabsList>
 
           <TabsContent value="catalog" className="space-y-6">
+            {/* Best Seller Section */}
+            {(() => {
+              const bestSeller = products.find(p => p.bestseller);
+              if (!bestSeller) return null;
+              
+              return (
+                <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2 text-primary">
+                      <Star className="w-5 h-5 fill-current" />
+                      <span>Most Selling Smartphone</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ProductCard
+                      {...bestSeller}
+                      onBuyNow={handleBuyNow}
+                      onPreOrder={handlePreOrder}
+                      onRequestInfo={handleRequestInfo}
+                    />
+                  </CardContent>
+                </Card>
+              );
+            })()}
+
             {/* Filter Bar */}
             <Card>
               <CardContent className="py-4">
